@@ -7,7 +7,7 @@ import {ShortEmail} from "@/app/email/dto/shortEmail";
 export class EmailRepository {
     private redisClient = RedisService.getInstance().getClient();
 
-    async getAllByPattern(pattern: string, cursor = 0, count = 10): Promise<ShortEmail[]> {
+    async getAllShortEmailsByPattern(pattern: string, cursor = 0, count = 10): Promise<ShortEmail[]> {
         try {
             const result: ShortEmail[] = [];
             const [_, keys] = await this.redisClient.scan(cursor, "MATCH", pattern, "COUNT", count);
@@ -39,7 +39,7 @@ export class EmailRepository {
         }
     }
 
-    async getByKey(key: string): Promise<Email | null> {
+    async getEmailByKey(key: string): Promise<Email | null> {
         try {
             const value = await this.redisClient.get(key);
             return value ? (JSON.parse(value) as Email) : null;
@@ -47,5 +47,17 @@ export class EmailRepository {
             console.error(`Error getting key ${key}: `, error);
             throw new Error('Could not retrieve data');
         }
+    }
+
+    async existsEmailAddressByKey(key: string): Promise<boolean> {
+        return this.redisClient.get(key).then( isExist => {
+            if (isExist == null) return false;
+            else return parseInt(isExist, 10) == 1
+            }
+        )
+    }
+
+    async setEmailAddress(key: string, emailAddress: string): Promise<string> {
+        return this.redisClient.set(key, emailAddress)
     }
 }

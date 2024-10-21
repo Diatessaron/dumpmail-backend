@@ -1,15 +1,23 @@
+import express from 'express';
 import {EmailService} from './email.service';
-import {Body, Controller, Get, Param, Post} from "@nestjs/common";
+import {Controller, Get, Param, Post, Req, Res} from "@nestjs/common";
 
 @Controller('email')
 export class EmailController {
     constructor(private readonly emailService: EmailService) {
     }
 
-    @Get()
-    initializeEmail() {
-    //     TODO: подумать как инициализировать имейл и делать это на основе куки(?). Чтобы типа не создавать много имейлов
-
+    @Post()
+    async initializeEmail(@Req() req: express.Request, @Res() res: express.Response) {
+        const [jwtToken, expirationTime, emailAddress] = await this.emailService.initializeEmail(req.cookies['session'])
+        res
+            .cookie('session', jwtToken, {
+                httpOnly: true,
+                maxAge: expirationTime,
+            })
+            .json({
+                email: emailAddress,
+            });
     }
 
     @Get()
