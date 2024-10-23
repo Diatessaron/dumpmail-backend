@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {EmailRepository} from './email.repotsitory'
-import {JwtAuthService} from "@/app/jwt/jwt.service";
+import {JwtAuthService} from "../jwt/jwt.service";
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -44,8 +44,8 @@ export class EmailService {
         return [ jwtToken, expirationTime, disposableEmail ];
     }
 
-    getEmails(email: string, cursor = 0, count = 10) {
-        return this.emailRepository.getAllShortEmailsByPattern(`email:${email}:*`, cursor, count)
+    getEmails(email: string, page = 0, count = 10) {
+        return this.emailRepository.getAllShortEmailsByPattern(`email:${email}:*`, page, count)
     }
 
     getEmail(email: string, date: string) {

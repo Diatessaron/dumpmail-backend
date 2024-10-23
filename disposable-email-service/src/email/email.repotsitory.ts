@@ -1,7 +1,7 @@
 import RedisService from "../lib/redis";
 import {Injectable} from "@nestjs/common";
-import {Email} from "@/app/email/model/email";
-import {ShortEmail} from "@/app/email/dto/shortEmail";
+import {Email} from "./model/email";
+import {ShortEmail} from "./dto/shortEmail";
 
 @Injectable()
 export class EmailRepository {
@@ -58,6 +58,6 @@ export class EmailRepository {
     }
 
     async setEmailAddress(key: string, emailAddress: string): Promise<string> {
-        return this.redisClient.set(key, emailAddress)
+        return this.redisClient.set(key, emailAddress, 'EX', 86400) //move TTL to process.env?
     }
 }

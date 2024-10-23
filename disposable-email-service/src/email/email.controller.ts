@@ -1,8 +1,8 @@
 import express from 'express';
 import {EmailService} from './email.service';
-import {Controller, Get, Param, Post, Req, Res} from "@nestjs/common";
+import {Controller, Get, Post, Query, Req, Res} from "@nestjs/common";
 
-@Controller('email')
+@Controller('/api/email')
 export class EmailController {
     constructor(private readonly emailService: EmailService) {
     }
@@ -20,13 +20,13 @@ export class EmailController {
             });
     }
 
-    @Get()
-    getEmails(@Param('email') email: string) {
-        return this.emailService.getEmails(email);
+    @Get('/all')
+    getEmails(@Query('email') emailAddress: string, @Query('page') page: number = 0) {
+        return this.emailService.getEmails(emailAddress, page);
     }
 
     @Get()
-    getEmail(@Param('email') email: string, @Param('date') date: string) {
-        return this.emailService.getEmail(email, date);
+    getEmail(@Query('email') emailAddress: string, @Query('date') date: string) {
+        return this.emailService.getEmail(emailAddress, date);
     }
 }
