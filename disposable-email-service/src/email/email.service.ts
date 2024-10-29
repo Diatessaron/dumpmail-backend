@@ -14,14 +14,14 @@ export class EmailService {
     ) {
     }
 
-    async initializeEmail(token: string): Promise<[string, number, string]> {
+    async initializeEmail(token: string | null): Promise<[string, number, string]> {
         //1. Если токена нет, то создаём, сохраняем в базу
         //2. если токен есть и просроченный, то создаём и сохраняем в базу
         //3. если токен есть и актуальный, то просто выдаём мыло назад и тела токена
         //TODO: добавить везде TtL в редисе - 24 часа (haraka в том числе)
 
         try {
-            if (!token) {
+            if (!!token) {
                 const decoded = this.jwtAuthService.validateJwtToken(token)
                 return [token, decoded.exp * 1000, decoded.email]
             }

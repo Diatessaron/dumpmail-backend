@@ -9,7 +9,7 @@ export class EmailController {
 
     @Post()
     async initializeEmail(@Req() req: express.Request, @Res() res: express.Response) {
-        const [jwtToken, expirationTime, emailAddress] = await this.emailService.initializeEmail(req.cookies['session'])
+        const [jwtToken, expirationTime, emailAddress] = await this.emailService.initializeEmail(req?.cookies?.['session'])
         res
             .cookie('session', jwtToken, {
                 httpOnly: true,

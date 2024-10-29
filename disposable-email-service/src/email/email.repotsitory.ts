@@ -14,11 +14,12 @@ export class EmailRepository {
 
             if (keys.length > 0) {
                 const pipeline = this.redisClient.pipeline();
-                keys.forEach((key) => pipeline.hgetall(key));
-                const values = (await pipeline.exec() || (() => { throw new Error('Redis pipeline execution failed') })()) as [Error | null, Email][];
+                keys.forEach((key) => pipeline.get(key));
+                const values = (await pipeline.exec() || (() => { throw new Error('Redis pipeline execution failed') })()) as [Error | null, string][];
 
                 //map fetched values
-                const projectedValues = values.map(([error, data], index) => {
+                const projectedValues = values.map(([error, dataStr], index) => {
+                    const data = Email.fromJSON(JSON.parse(dataStr))
                     if (!error && data && data.to) {
                         const keyParts = keys[index].split(":");
                         const unixTimestamp = keyParts[keyParts.length - 1];
@@ -42,7 +43,7 @@ export class EmailRepository {
     async getEmailByKey(key: string): Promise<Email | null> {
         try {
             const value = await this.redisClient.get(key);
-            return value ? (JSON.parse(value) as Email) : null;
+            return value ? Email.fromJSON(JSON.parse(value)) : null;
         } catch (error) {
             console.error(`Error getting key ${key}: `, error);
             throw new Error('Could not retrieve data');
