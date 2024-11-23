@@ -59,6 +59,6 @@ export class EmailRepository {
     }
 
     async setEmailAddress(key: string, emailAddress: string): Promise<string> {
-        return this.redisClient.set(key, emailAddress, 'EX', 86400) //move TTL to process.env?
+        return this.redisClient.set(key, emailAddress, 'EX', process.env.TTL)
     }
 }

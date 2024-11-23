@@ -19,7 +19,7 @@ exports.hook_data = function (next, connection) {
         const emailJson = buildEmailJson(parsedEmail);
 
         try {
-            await redis.set(`email:${recipient}:${Date.now()}`, JSON.stringify(emailJson), 'EX', 86400); //move TTL to process.env?
+            await redis.set(`email:${recipient}:${Date.now()}`, JSON.stringify(emailJson), 'EX', process.env.TTL);
             logger.loginfo(`Stored email for ${recipient}`);
         } catch (err) {
             logger.logerror(`Failed to store email: ${err}`);
