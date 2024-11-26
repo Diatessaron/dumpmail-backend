@@ -1,5 +1,4 @@
 const Redis = require('ioredis');
-const logger = require('haraka/logger');
 const simpleParser = require('mailparser');
 
 let redis = new Redis({
@@ -10,7 +9,10 @@ let redis = new Redis({
 
 exports.hook_data = function (next, connection) {
     connection.transaction.parse_body = true;
+    next()
+}
 
+exports.hook_data_post = function (next, connection) {
     connection.transaction.body.on('end', async function () {
         const recipient = connection.transaction.rcpt_to[0].address();
         const emailData = connection.transaction.body.bodytext;
@@ -20,9 +22,9 @@ exports.hook_data = function (next, connection) {
 
         try {
             await redis.set(`email:${recipient}:${Date.now()}`, JSON.stringify(emailJson), 'EX', process.env.TTL);
-            logger.loginfo(`Stored email for ${recipient}`);
+            connection.loginfo(`Stored email for ${recipient}`);
         } catch (err) {
-            logger.logerror(`Failed to store email: ${err}`);
+            connection.logerror(`Failed to store email: ${err}`);
         }
     });
 
