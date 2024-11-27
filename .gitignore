@@ -16,7 +16,8 @@ disposable-email-service/node_modules/
 
 #haraka
 haraka/config/*
-
+haraka/.env
+haraka/node_modules/*
 
 # production
 /build
@@ -32,7 +33,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
-/haraka/.env
 
 # vercel
 .vercel
