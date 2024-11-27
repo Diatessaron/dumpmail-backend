@@ -17,6 +17,8 @@ exports.hook_data_post = function (next, connection) {
     const transaction = connection.transaction;
     const emailBody = transaction.body;
 
+    connection.loginfo("Body test: " + JSON.stringify(emailBody.bodytext))
+
     simpleParser(emailBody.bodytext, (err, parsed) => {
         if (err) {
             connection.logerror(`Email parsing failed: ${err.message}`);
@@ -33,7 +35,7 @@ exports.hook_data_post = function (next, connection) {
             subject: subject,
             from: from,
             to: to,
-            text: parsed.text.substring(0, parsed.text.length - 1),
+            text: emailBody.bodytext.substring(0, emailBody.bodytext.length - 1),
             textAsHtml: parsed.textAsHtml,
             isHtml: parsed.html,
             attachments: parsed.attachments.map(att => ({
@@ -43,7 +45,7 @@ exports.hook_data_post = function (next, connection) {
             }))
         };
 
-        const redisKey = `email:${headers.to}:${Date.now()}`;
+        const redisKey = `email:${to}:${Date.now()}`;
         redis.set(redisKey, JSON.stringify(emailJson), 'EX', process.env.TTL, (err) => {
             if (err) {
                 connection.logerror(`Redis .set() failed: ${err.message}`);
