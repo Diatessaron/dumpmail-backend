@@ -22,7 +22,7 @@ exports.hook_data_post = function (next, connection) {
     simpleParser(emailBody.bodytext, (err, parsed) => {
         if (err) {
             connection.logerror(`Email parsing failed: ${err.message}`);
-            return next();
+            return next(DENYSOFT);
         }
 
         connection.loginfo("Parsed text: " + JSON.stringify(parsed))
@@ -51,8 +51,7 @@ exports.hook_data_post = function (next, connection) {
                 connection.logerror(`Redis .set() failed: ${err.message}`);
             }
             connection.loginfo(`Email stored successfully`);
+            next(OK)
         });
     });
-
-    next()
 };
