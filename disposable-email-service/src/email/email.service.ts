@@ -14,7 +14,7 @@ export class EmailService {
     ) {
     }
 
-    async initializeEmail(token: string | null): Promise<[string, number, string]> {
+    async initializeEmail(token: string | null): Promise<[string, string]> {
         //1. Если токена нет, то создаём, сохраняем в базу
         //2. если токен есть и просроченный, то создаём и сохраняем в базу
         //3. если токен есть и актуальный, то просто выдаём мыло назад и тела токена
@@ -22,7 +22,7 @@ export class EmailService {
         try {
             if (!!token) {
                 const decoded = this.jwtAuthService.validateJwtToken(token)
-                return [token, decoded.exp * 1000, decoded.email]
+                return [token, decoded.email]
             }
         } catch (error) {
             console.log("Got expired token. Creating a new one", token)
@@ -37,10 +37,10 @@ export class EmailService {
             if (!exists) break;
         } while (true);
 
-        const [ jwtToken, expirationTime ] = this.jwtAuthService.generateJwtToken(disposableEmail);
+        const jwtToken = this.jwtAuthService.generateJwtToken(disposableEmail);
         await this.emailRepository.setEmailAddress(`emailAddress:${disposableEmail}`, jwtToken)
 
-        return [ jwtToken, expirationTime, disposableEmail ];
+        return [ jwtToken, disposableEmail ];
     }
 
     getEmails(email: string, page = 0, count = 10) {

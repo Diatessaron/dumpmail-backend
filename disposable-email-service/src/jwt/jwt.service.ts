@@ -5,9 +5,9 @@ import { JwtService } from '@nestjs/jwt';
 export class JwtAuthService {
     constructor(private readonly jwtService: JwtService) {}
 
-    generateJwtToken(email: string): [string, number] {
+    generateJwtToken(email: string): string {
         const payload = { email };
-        return [this.jwtService.sign(payload, { expiresIn: '24h' }), 86400000]; //24 hours expiration time for the cookie with token
+        return this.jwtService.sign(payload, { expiresIn: '24h' }); //24 hours expiration time for the authorization header
     }
 
     validateJwtToken(token: string): any {

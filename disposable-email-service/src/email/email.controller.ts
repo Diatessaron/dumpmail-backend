@@ -11,18 +11,12 @@ export class EmailController {
 
     @Post()
     async initializeEmail(@Req() req: express.Request, @Res() res: express.Response) {
-        const [jwtToken, expirationTime, emailAddress] = await this.emailService.initializeEmail(req?.cookies?.['session'])
+        const [ jwtToken, emailAddress ] = await this.emailService.initializeEmail(req?.header('Authorization')?.split(' ')[1]);
         res
-            .cookie('session', jwtToken, {
-                httpOnly: true,
-                maxAge: expirationTime,
-                sameSite: 'none',
-                secure: true,
-                domain: process.env.DOMAIN
-            })
+            .header('Authorization', `Bearer ${jwtToken}`)
             .json({
                 email: emailAddress,
-            });
+            })
     }
 
     @Get('/all')
