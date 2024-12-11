@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EmailService } from './email.service';
-import {EmailRepository} from "./email.repotsitory";
+import {EmailRepository} from "./email.repository";
 import {JwtAuthService} from "../jwt/jwt.service";
 import {JwtModule} from "@nestjs/jwt";
 

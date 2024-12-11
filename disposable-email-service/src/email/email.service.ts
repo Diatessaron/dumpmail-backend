@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {EmailRepository} from './email.repotsitory'
+import {EmailRepository} from './email.repository'
 import {JwtAuthService} from "../jwt/jwt.service";
 import { v4 as uuidv4 } from 'uuid';
 

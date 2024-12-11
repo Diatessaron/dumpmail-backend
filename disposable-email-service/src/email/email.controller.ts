@@ -16,6 +16,9 @@ export class EmailController {
             .cookie('session', jwtToken, {
                 httpOnly: true,
                 maxAge: expirationTime,
+                sameSite: 'none',
+                secure: true,
+                domain: process.env.DOMAIN
             })
             .json({
                 email: emailAddress,

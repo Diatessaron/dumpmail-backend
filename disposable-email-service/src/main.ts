@@ -5,9 +5,16 @@ require('dotenv').config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:3001',
-    methods: 'GET,POST',
-    credentials: true
+    origin: (origin, callback) => {
+      const allowedOrigins = ['http://localhost:3001', 'https://diatessaron.github.io'];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
   });
   await app.listen(process.env.PORT ?? 3000);
 }
