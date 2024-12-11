@@ -7,31 +7,37 @@ import {ShortEmail} from "./dto/shortEmail";
 export class EmailRepository {
     private redisClient = RedisService.getInstance().getClient();
 
-    async getAllShortEmailsByPattern(pattern: string, cursor = 0, count = 10): Promise<ShortEmail[]> {
+    async getAllShortEmailsByPattern(pattern: string, cursor = 0, count = 1000): Promise<ShortEmail[]> {
         try {
             const result: ShortEmail[] = [];
-            const [_, keys] = await this.redisClient.scan(cursor, "MATCH", pattern, "COUNT", count);
 
-            if (keys.length > 0) {
-                const pipeline = this.redisClient.pipeline();
-                keys.forEach((key) => pipeline.get(key));
-                const values = (await pipeline.exec() || (() => { throw new Error('Redis pipeline execution failed') })()) as [Error | null, string][];
+            do {
+                const [newCursor, keys] = await this.redisClient.scan(cursor, "MATCH", pattern, "COUNT", count);
+                cursor = parseInt(newCursor);
 
-                //map fetched values
-                const projectedValues = values.map(([error, dataStr], index) => {
-                    const data = Email.fromJSON(JSON.parse(dataStr))
-                    if (!error && data && data.to) {
-                        const keyParts = keys[index].split(":");
-                        const unixTimestamp = keyParts[keyParts.length - 1];
-                        const date = new Date(parseInt(unixTimestamp));
+                if (keys.length > 0) {
+                    const pipeline = this.redisClient.pipeline();
+                    keys.forEach((key) => pipeline.get(key));
+                    const values = (await pipeline.exec() || (() => {
+                        throw new Error('Redis pipeline execution failed')
+                    })()) as [Error | null, string][];
 
-                        return new ShortEmail(data.from, data.to, data.subject, date);
-                    }
-                    return null;
-                }).filter(item => item !== null);
+                    //map fetched values
+                    const projectedValues = values.map(([error, dataStr], index) => {
+                        const data = Email.fromJSON(JSON.parse(dataStr))
+                        if (!error && data && data.to) {
+                            const keyParts = keys[index].split(":");
+                            const unixTimestamp = keyParts[keyParts.length - 1];
+                            const date = new Date(parseInt(unixTimestamp));
 
-                result.push(...projectedValues);
-            }
+                            return new ShortEmail(data.from, data.to, data.subject, date);
+                        }
+                        return null;
+                    }).filter(item => item !== null);
+
+                    result.push(...projectedValues);
+                }
+            } while (cursor !== 0)
 
             return result.slice(0, count);
         } catch (error) {
