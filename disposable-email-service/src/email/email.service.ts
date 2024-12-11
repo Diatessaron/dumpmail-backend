@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class EmailService {
     private domain: string = (process.env.DOMAIN as string);
-    private emailLength: number = parseInt(process.env.EMAIL_LENGTH || "10");
+    private emailLength: number = parseInt(process.env.EMAIL_LENGTH || "13");
 
     constructor(
         private readonly emailRepository: EmailRepository,
