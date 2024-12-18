@@ -16,23 +16,20 @@ export class Email {
     from: string;
     to: string;
     subject: string;
-    textBody: string;
-    htmlBody: string;
+    text: string;
     attachments: EmailAttachment[];
 
     constructor(
         from: string,
         to: string,
         subject: string,
-        textBody: string,
-        htmlBody: string,
+        text: string,
         attachments: EmailAttachment[]
     ) {
         this.from = from;
         this.to = to;
         this.subject = subject;
-        this.textBody = textBody;
-        this.htmlBody = htmlBody;
+        this.text = text;
         this.attachments = attachments;
     }
 
@@ -50,8 +47,7 @@ export class Email {
             json.from,
             json.to,
             json.subject,
-            json.textBody,
-            json.htmlBody,
+            json.text,
             attachments
         );
     }
