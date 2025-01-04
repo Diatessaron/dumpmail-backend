@@ -9,15 +9,8 @@
 # testing
 /coverage
 
-#email service - next.js
-disposable-email-service/.next/
-disposable-email-service/out/
-disposable-email-service/node_modules/
-
-#haraka
-haraka/config/*
-haraka/.env
-haraka/node_modules/*
+node_modules/
+dist/
 
 # production
 /build
@@ -31,8 +24,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
 .env*.local
+.env
 
 # vercel
 .vercel
