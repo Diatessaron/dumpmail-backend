@@ -9,8 +9,8 @@ class RedisService {
         this.redis = new Redis({
             host: redisUrl.hostname,
             port: Number(redisUrl.port),
-            username: redisUrl.username || undefined,
-            password: redisUrl.password || undefined,
+            username: process.env.REDIS_USER || undefined,
+            password: process.env.REDIS_PASSWORD || undefined,
         });
     }
 
