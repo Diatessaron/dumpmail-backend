@@ -5,10 +5,12 @@ class RedisService {
     private readonly redis: Redis;
 
     private constructor() {
+        const redisUrl = new URL(process.env.REDIS_URL || 'redis://localhost:6379');
         this.redis = new Redis({
-            path: process.env.REDIS_URL || 'redis://localhost:6379',
-            username: process.env.REDIS_USER,
-            password: process.env.REDIS_PASSWORD,
+            host: redisUrl.hostname,
+            port: Number(redisUrl.port),
+            username: redisUrl.username || undefined,
+            password: redisUrl.password || undefined,
         });
     }
 
