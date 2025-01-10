@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {EmailRepository} from './email.repository'
 import {JwtAuthService} from "../jwt/jwt.service";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 @Injectable()
 export class EmailService {
@@ -40,7 +40,7 @@ export class EmailService {
         const jwtToken = this.jwtAuthService.generateJwtToken(disposableEmail);
         await this.emailRepository.setEmailAddress(`emailAddress:${disposableEmail}`, jwtToken)
 
-        return [ jwtToken, disposableEmail ];
+        return [jwtToken, disposableEmail];
     }
 
     getEmails(email: string, page = 0, count = 10) {
