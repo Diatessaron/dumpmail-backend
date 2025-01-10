@@ -3,6 +3,7 @@ import {EmailController} from "./email/email.controller";
 import {JwtModule} from "@nestjs/jwt";
 import {EmailModule} from "./email/email.module";
 import {CookieParserMiddleware} from "./lib/CookieParserMiddleware";
+import {AppController} from "./AppController";
 
 @Module({
     imports: [
@@ -12,7 +13,7 @@ import {CookieParserMiddleware} from "./lib/CookieParserMiddleware";
             signOptions: {expiresIn: '24h'},
         }),
     ],
-    controllers: [EmailController],
+    controllers: [AppController, EmailController],
     providers: [],
 })
 export class AppModule implements NestModule {
