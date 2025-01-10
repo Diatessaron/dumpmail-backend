@@ -5,7 +5,11 @@ class RedisService {
     private readonly redis: Redis;
 
     private constructor() {
-        this.redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+        this.redis = new Redis({
+            path: process.env.REDIS_URL || 'redis://localhost:6379',
+            username: process.env.REDIS_USER,
+            password: process.env.REDIS_PASSWORD,
+        });
     }
 
     public static getInstance(): RedisService {
