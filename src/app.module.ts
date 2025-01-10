@@ -1,6 +1,5 @@
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import {AppController} from './app.controller';
-import {AppService} from './app.service';
 import {EmailController} from "./email/email.controller";
 import {JwtModule} from "@nestjs/jwt";
 import {EmailModule} from "./email/email.module";
@@ -15,7 +14,7 @@ import {CookieParserMiddleware} from "./lib/CookieParserMiddleware";
         }),
     ],
     controllers: [AppController, EmailController],
-    providers: [AppService],
+    providers: [],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer): any {
