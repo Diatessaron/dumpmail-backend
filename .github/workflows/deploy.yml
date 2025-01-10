@@ -29,7 +29,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /${{ secrets.SERVER_USER }}/dumpmail-backend
+            cd /opt/${{ secrets.SERVER_USER }}/dumpmail-backend
             git pull origin main
             npm install
             npm run build

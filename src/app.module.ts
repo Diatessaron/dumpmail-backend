@@ -3,7 +3,7 @@ import {AppController} from './app.controller';
 import {EmailController} from "./email/email.controller";
 import {JwtModule} from "@nestjs/jwt";
 import {EmailModule} from "./email/email.module";
-import {CookieParserMiddleware} from "./lib/CookieParserMiddleware";
+import {CookieParserMiddleware} from "./lib/cookie-parser.middleware";
 
 @Module({
     imports: [
