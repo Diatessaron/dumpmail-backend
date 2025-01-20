@@ -23,6 +23,8 @@ export class EmailService {
             if (!!token) {
                 const decoded = this.jwtAuthService.validateJwtToken(token)
                 return [token, decoded.email]
+            } else {
+                console.log('No token provided. Creating a new one');
             }
         } catch (error) {
             console.log("Got expired token. Creating a new one", token)
