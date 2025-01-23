@@ -5,12 +5,12 @@ import { JwtService } from '@nestjs/jwt';
 export class JwtAuthService {
     constructor(private readonly jwtService: JwtService) {}
 
-    generateJwtToken(email: string): string {
+    generateJwtToken(email: string): Promise<string> {
         const payload = { email };
-        return this.jwtService.sign(payload, { expiresIn: '24h' }); //24 hours expiration time for the authorization header
+        return this.jwtService.signAsync(payload, { expiresIn: '24h' }); //24 hours expiration time for the authorization header
     }
 
-    validateJwtToken(token: string): any {
-        return this.jwtService.verify(token);
+    validateJwtToken(token: string): Promise<any> {
+        return this.jwtService.verifyAsync(token);
     }
 }

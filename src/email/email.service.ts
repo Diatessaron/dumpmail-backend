@@ -21,7 +21,7 @@ export class EmailService {
 
         try {
             if (!!token) {
-                const decoded = this.jwtAuthService.validateJwtToken(token)
+                const decoded = await this.jwtAuthService.validateJwtToken(token)
                 return [token, decoded.email]
             } else {
                 console.log('No token provided. Creating a new one');
@@ -39,7 +39,7 @@ export class EmailService {
             if (!exists) break;
         } while (true);
 
-        const jwtToken = this.jwtAuthService.generateJwtToken(disposableEmail);
+        const jwtToken = await this.jwtAuthService.generateJwtToken(disposableEmail);
         await this.emailRepository.setEmailAddress(`emailAddress:${disposableEmail}`, jwtToken)
 
         return [jwtToken, disposableEmail];
